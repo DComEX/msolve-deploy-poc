@@ -8,25 +8,25 @@ RUN apt-get update
 RUN apt-get install -y ssh wget build-essential
 RUN apt-get install -y software-properties-common
 
-# MPICH
-RUN wget -q http://www.mpich.org/static/downloads/3.1.4/mpich-3.1.4.tar.gz \
-    && tar xf mpich-3.1.4.tar.gz \
-    && cd mpich-3.1.4 \
-    && ./configure --disable-fortran --enable-fast=all,O3 --prefix=/usr \
-    && make -j$(nproc) \
-    && make install \
-    && ldconfig \
-    && cd .. \
-    && rm -rf mpich-3.1.4 \
-    && rm mpich-3.1.4.tar.gz
+# # MPICH
+# RUN wget -q http://www.mpich.org/static/downloads/3.1.4/mpich-3.1.4.tar.gz \
+#     && tar xf mpich-3.1.4.tar.gz \
+#     && cd mpich-3.1.4 \
+#     && ./configure --disable-fortran --enable-fast=all,O3 --prefix=/usr \
+#     && make -j$(nproc) \
+#     && make install \
+#     && ldconfig \
+#     && cd .. \
+#     && rm -rf mpich-3.1.4 \
+#     && rm mpich-3.1.4.tar.gz
 
-# CUDA
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
-RUN mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
-RUN apt-key adv --no-tty --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-RUN add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
-RUN apt-get update
-RUN apt-get -y install cuda
+# # CUDA
+# RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+# RUN mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
+# RUN apt-key adv --no-tty --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+# RUN add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
+# RUN apt-get update
+# RUN apt-get -y install cuda
 
 # MONO
 # RUN apt install gnupg ca-certificates
@@ -45,7 +45,8 @@ RUN apt-get update
 RUN apt-get install -y dotnet-sdk-6.0
 
 # MSolve App
-WORKDIR /mpidocker/MSolveApp/Msolve.One.MPI
+WORKDIR /mpidocker/MSolveApp/ISAAR.MSolve.MSolve4Korali
+# WORKDIR /mpidocker/MSolveApp/Msolve.One.MPI
 RUN dotnet build
 
 WORKDIR /mpidocker

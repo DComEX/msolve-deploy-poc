@@ -73,16 +73,18 @@ Korali4MSolve inputfile processidentifier
         /// <returns>True if arguments are valid and false if not</returns>
         private static bool InitializeEnvironment(string[] args)
         {
-            string firstArgument = args.FirstOrDefault();
-            if (args.Length != 2 || firstArgument == null || (firstArgument != null && (firstArgument == "/?" || firstArgument == "/h")))
-            {
-                Environment.ExitCode = (int)ExitCode.InvalidArguments;
-                Console.WriteLine(helpMessage);
-                return false;
-            }
+            // string firstArgument = args.FirstOrDefault();
+            // if (args.Length != 2 || firstArgument == null || (firstArgument != null && (firstArgument == "/?" || firstArgument == "/h")))
+            // {
+            //     Environment.ExitCode = (int)ExitCode.InvalidArguments;
+            //     Console.WriteLine("Invalid Arguments!\n" + helpMessage);
+            //     return false;
+            // }
 
-            inputFile = args[0].Trim();
-            processIdentifier = args[1].Trim();
+            // inputFile = args[0].Trim();
+            // processIdentifier = args[1].Trim();
+            inputFile = Path.Combine("/mpidocker", "KoralliDir", "model.xml");
+            processIdentifier = "1";
             if (File.Exists(inputFile) == false)
             {
                 Environment.ExitCode = (int)ExitCode.FileNotFound;
@@ -250,7 +252,8 @@ Korali4MSolve inputfile processidentifier
         {
             Console.WriteLine("Writing output to xml...");
             Environment.ExitCode = (int)ExitCode.ErrorWritingOutput;
-            string outputFile = $"MSolveOutput-{processIdentifier}.xml";
+            string outputFileName = $"MSolveOutput-{processIdentifier}.xml";
+            string outputFile = Path.Combine("/mpidocker", "KoralliDir", outputFileName);
             var settings = new XmlWriterSettings
             {
                 Indent = true,
@@ -342,7 +345,9 @@ Korali4MSolve inputfile processidentifier
         }
 
         private static bool SolveCantileverProblem()
-        {
+        {            
+            Console.WriteLine("Solving problem...");
+         
             var model = new Model();
             model.SubdomainsDictionary.Add(0, new Subdomain(0));
 
@@ -392,7 +397,7 @@ Korali4MSolve inputfile processidentifier
                 }
                 lines[i] = line;
             }
-            File.WriteAllLines("cantileverHalf.txt", lines);
+            File.WriteAllLines(Path.Combine("/mpidocker", "KoralliDir", "cantileverHalf.txt"), lines);
             parentAnalyzer.Solve();
 
             var outputValues = new Dictionary<Tuple<double, double>, double>();
@@ -409,13 +414,16 @@ Korali4MSolve inputfile processidentifier
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting MSolve4Korali");
             Environment.ExitCode = (int)ExitCode.UnknownError;
             if (InitializeEnvironment(args) == false)
             {
+                Console.WriteLine("Could not initialize Environment. Exiting.");
                 return;
             }
             if (InitializeProblemParametersFromInputFile() == false)
             {
+                Console.WriteLine("Could not initialize problem parameters from input. Exiting.");
                 return;
             }
             switch (problemType)
@@ -423,16 +431,19 @@ Korali4MSolve inputfile processidentifier
                 case ProblemType.Cantilever:
                     if (SolveCantileverProblem() == false)
                     {
+                        Console.WriteLine("Could not solve Cantilever problem. Exiting.");
                         return;
                     }
                     break;
                 case ProblemType.Thermal:
                     if (SolveThermalProblem() == false)
                     {
+                        Console.WriteLine("Could not solve Thermal problem. Exiting.");
                         return;
                     }
                     break;
                 default:
+                    Console.WriteLine("Could not resolve problem type. Exiting.");
                     return;
             }
 
