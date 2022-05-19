@@ -83,7 +83,7 @@ Korali4MSolve inputfile processidentifier
 
             // inputFile = args[0].Trim();
             // processIdentifier = args[1].Trim();
-            inputFile = Path.Combine("/mpidocker", "KoralliDir", "model.xml");
+            inputFile = Path.Combine("/msolve", "ioDir", "model.xml");
             processIdentifier = "1";
             if (File.Exists(inputFile) == false)
             {
@@ -253,7 +253,7 @@ Korali4MSolve inputfile processidentifier
             Console.WriteLine("Writing output to xml...");
             Environment.ExitCode = (int)ExitCode.ErrorWritingOutput;
             string outputFileName = $"MSolveOutput-{processIdentifier}.xml";
-            string outputFile = Path.Combine("/mpidocker", "KoralliDir", outputFileName);
+            string outputFile = Path.Combine("/msolve", "ioDir", outputFileName);
             var settings = new XmlWriterSettings
             {
                 Indent = true,
@@ -397,7 +397,7 @@ Korali4MSolve inputfile processidentifier
                 }
                 lines[i] = line;
             }
-            File.WriteAllLines(Path.Combine("/mpidocker", "KoralliDir", "cantileverHalf.txt"), lines);
+            File.WriteAllLines(Path.Combine("/msolve", "ioDir", "cantileverHalf.txt"), lines);
             parentAnalyzer.Solve();
 
             var outputValues = new Dictionary<Tuple<double, double>, double>();

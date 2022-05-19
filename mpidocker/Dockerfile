@@ -1,8 +1,8 @@
-FROM ubuntu:18.04
+FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
 
-WORKDIR /mpidocker
-COPY ./mpidocker .
+WORKDIR /msolve
+COPY ./msolve .
 
 RUN apt-get update
 RUN apt-get install -y ssh wget build-essential
@@ -45,9 +45,9 @@ RUN apt-get update
 RUN apt-get install -y dotnet-sdk-6.0
 
 # MSolve App
-WORKDIR /mpidocker/MSolveApp/ISAAR.MSolve.MSolve4Korali
-# WORKDIR /mpidocker/MSolveApp/Msolve.One.MPI
+WORKDIR /msolve/MSolveApp/ISAAR.MSolve.MSolve4Korali
+# WORKDIR /msolve/MSolveApp/Msolve.One.MPI
 RUN dotnet build
 
-WORKDIR /mpidocker
+WORKDIR /msolve
 RUN chmod +x runTest.sh
